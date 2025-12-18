@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Market Tea Portal - Reports</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body { font-family: system-ui, Arial, sans-serif; margin: 2rem; }
+      .box { max-width: 720px; padding: 1.25rem; border: 1px solid #ddd; border-radius: 10px; }
+      .error { color: #b00020; margin-top: 0.75rem; }
+      label { display:block; margin-bottom: 0.5rem; }
+      button { margin-top: 1rem; padding: 0.6rem 1rem; cursor: pointer; }
+    </style>
+  </head>
+
+  <body>
+    <div class="box">
+      <h1>Reports</h1>
+      <p>Upload an Excel file and generate a report (download as XLSX).</p>
+
+      <form method="post" action="/reports/generate/" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label>
+          Excel file:
+          <input type="file" name="file" accept=".xlsx,.xlsm,.xls" required />
+        </label>
+        <button type="submit">Generate report</button>
+      </form>
+
+      {% if error %}
+        <div class="error"><strong>Error:</strong> {{ error }}</div>
+      {% endif %}
+    </div>
+  </body>
+</html>
