@@ -7,7 +7,8 @@ from django.http import FileResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
-from .engine import generate_report, ReportConfig
+from .configs import CFG_RESTOCKING_REPORT
+from .engine import generate_report
 
 
 @require_http_methods(["GET"])
@@ -35,13 +36,13 @@ def generate_from_upload(request):
                     f.write(chunk)
 
             out_dir = tmpdir_path / "out"
-            cfg = ReportConfig(excel_key_col="code")  # adjust later if your Excel uses another key
+            cfg = CFG_RESTOCKING_REPORT
             report_path = generate_report(excel_path, out_dir, cfg)
 
             return FileResponse(
                 report_path.open("rb"),
                 as_attachment=True,
-                filename="report.xlsx",
+                filename=f"{cfg.output_excel_name}.xlsx",
                 content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             )
 
