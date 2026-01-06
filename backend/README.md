@@ -11,7 +11,7 @@ The setup is designed to be:
 ---
 ## Architecture Overview
 
-![back-end-implementation.png](docs/images/back-end-implementation.png)
+![back-end-implementation.png](../docs/images/back-end-implementation.png)
 ### Components
 - Debian 13 – (Base OS)
 - Python 3.13 - (Language runtime)
