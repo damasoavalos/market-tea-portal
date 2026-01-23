@@ -22,18 +22,19 @@ sys.path.insert(0, str(BASE_DIR / "apps"))
 load_dotenv(BASE_DIR / ".env")
 
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7(r2@^i_*89@h)k5a9)^$ev-x$5n+tnj9$1p2gz*32t8h0j2vq'
+SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
+# SECRET_KEY = 'django-insecure-7(r2@^i_*89@h)k5a9)^$ev-x$5n+tnj9$1p2gz*32t8h0j2vq'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DJANGO_DEBUG", "False").strip().lower() in ("1", "true", "yes", "on")
+# DEBUG = os.getenv("DJANGO_DEBUG", "false").lower() in ("1", "true", "yes", "on")
 
-ALLOWED_HOSTS = []
-
+allowed_hosts = os.environ.get("DJANGO_ALLOWED_HOSTS", "")
+ALLOWED_HOSTS = [h.strip() for h in allowed_hosts.split(",") if h.strip()]
 
 # Application definition
 
@@ -76,18 +77,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME', ''),
-        'USER': os.getenv('DB_USER', ''),
-        'PASSWORD': os.getenv('DB_PASSWORD', ''),
-        'HOST': os.getenv('DB_HOST', '127.0.0.1'),
-        'PORT': os.getenv('DB_PORT', '5432'),
+        'NAME': os.environ.get('DB_NAME', ''),
+        'USER': os.environ.get('DB_USER', ''),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': os.environ.get('DB_HOST', '127.0.0.1'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
 
@@ -127,4 +127,24 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+STATICFILES_DIRS = []
+static_dir = BASE_DIR / "static"
+if static_dir.exists():
+    STATICFILES_DIRS.append(static_dir)
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "file": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": str(BASE_DIR / "logs" / "django.log"),
+        },
+    },
+    "root": {
+        "handlers": ["file"],
+        "level": "INFO",
+    },
+}
