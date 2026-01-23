@@ -58,7 +58,7 @@ nmcli device status
 ```
 Example static configuration:
 ```bash
-sudo nmcli connection modify "FBI-HQ" \
+sudo nmcli connection modify "HOME-SSID" \
   ipv4.method manual \
   ipv4.addresses 192.168.1.92/24 \
   ipv4.gateway 192.168.1.254 \
@@ -67,8 +67,8 @@ sudo nmcli connection modify "FBI-HQ" \
 ```
 Apply:
 ```bash
-sudo nmcli connection down "FBI-HQ"
-sudo nmcli connection up "FBI-HQ"
+sudo nmcli connection down "HOME-SSID"
+sudo nmcli connection up "HOME-SSID"
 ```
 ---
 ## 3. SSH Access
